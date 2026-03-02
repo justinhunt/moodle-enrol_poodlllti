@@ -18,4 +18,17 @@ $capabilities = [
             'manager' => CAP_ALLOW,
         ],
     ],
+    'enrol/poodlllti:cancreateplatform' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+        ],
+    ],
+
+    'enrol/poodlllti:manageallplatforms' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+        ],
+    ],
 ];

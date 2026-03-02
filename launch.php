@@ -68,16 +68,16 @@ $course = $DB->get_record('course', ['idnumber' => $coursetargetidnumber]);
 
 if (!$course) {
     // Try to find a course from the "Pool" in this category
-    $sql = "SELECT * FROM {course} 
-             WHERE category = :category 
+    $sql = "SELECT * FROM {course}
+             WHERE category = :category
                AND (idnumber IS NULL OR idnumber = '')
              ORDER BY sortorder ASC";
     $poolcourse = $DB->get_record_sql($sql, ['category' => $category->id], IGNORE_MULTIPLE);
-    
+
     if (!$poolcourse) {
         throw new moodle_exception('No available pool course found in category: ' . s($category->name));
     }
-    
+
     // Claim the pool course
     $poolcourse->idnumber = $coursetargetidnumber;
     $poolcourse->fullname = $context['title'] ?? ('Course ' . $contextid);
@@ -139,7 +139,7 @@ if ($sectionid) {
     } else {
         $groupid = $group->id;
     }
-    
+
     if ($groupid && !groups_is_member($groupid, $USER->id)) {
         groups_add_member($groupid, $USER->id);
     }
@@ -152,7 +152,7 @@ $modcontext = context_module::instance($cm->id);
 $sql = "SELECT e.*, t.roleinstructor, t.rolelearner
           FROM {enrol} e
           JOIN {enrol_lti_tools} t ON t.enrolid = e.id
-         WHERE e.enrol = :enrol 
+         WHERE e.enrol = :enrol
            AND t.contextid = :contextid";
 $params = ['enrol' => 'poodlllti', 'contextid' => $modcontext->id];
 $instance = $DB->get_record_sql($sql, $params);
@@ -160,15 +160,16 @@ $instance = $DB->get_record_sql($sql, $params);
 if (!$instance) {
     // Create new instance for this CM
     $lticonfig = get_config('enrol_lti');
-    global $SITE;
+    $instructorroleid = key(get_archetype_roles('editingteacher'));
+    $learnerroleid = key(get_archetype_roles('student'));
     $fields = [
         'contextid' => $modcontext->id,
-        'institution' => $lticonfig->institution ?? $SITE->fullname,
+        'institution' => $lticonfig->institution ?? get_site()->fullname,
         'city' => $lticonfig->city ?? $CFG->defaultcity ?? '',
         'country' => $lticonfig->country ?? $CFG->country ?? 'AU',
-        'roleinstructor' => 3,
-        'rolelearner' => 5,
-        'roleid' => 5,
+        'roleinstructor' => $instructorroleid,
+        'rolelearner' => $learnerroleid,
+        'roleid' => $learnerroleid,
         'provisioningmodeinstructor' => auth_plugin_lti::PROVISIONING_MODE_PROMPT_NEW_EXISTING,
         'provisioningmodelearner' => auth_plugin_lti::PROVISIONING_MODE_AUTO_ONLY
     ];

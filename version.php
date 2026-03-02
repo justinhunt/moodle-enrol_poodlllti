@@ -1,7 +1,8 @@
 <?php
+
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2023102503;
+$plugin->version = 2023102503.07;
 $plugin->requires = 2021051700;
 $plugin->component = 'enrol_poodlllti';
 $plugin->maturity = MATURITY_ALPHA;

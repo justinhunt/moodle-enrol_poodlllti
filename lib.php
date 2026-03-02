@@ -45,6 +45,19 @@ class enrol_poodlllti_plugin extends enrol_lti_plugin {
         return has_capability('enrol/poodlllti:config', $context);
     }
 
+    public function add_default_instance($course) {
+        $context = context_course::instance($course->id);
+        $instructorroleid = key(get_archetype_roles('editingteacher'));
+        $learnerroleid = key(get_archetype_roles('student'));
+
+        $field = [
+            'contextid' => $context->id,
+            'roleinstructor' => $instructorroleid,
+            'rolelearner' => $learnerroleid,
+        ];
+        return $this->add_instance($course, $field);
+    }
+
     // Inherit other methods from enrol_lti_plugin.
     // add_instance will use enrol_lti_tools table which is what we want for reusing LTI infrastructure.
 }
