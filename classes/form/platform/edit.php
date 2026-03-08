@@ -173,7 +173,13 @@ class edit extends dynamic_form {
     public function assign_category(object $formdata): self {
         global $DB;
 
-        $category = $DB->get_record('course_categories', ['idnumber' => $formdata->deploymentid]);
+        // Compute Tenant Key
+        $platformid = $formdata->platformid ?? '';
+        $clientid = $formdata->clientid ?? '';
+        $deploymentid = $formdata->deploymentid ?? '';
+        $tenantkey = md5(implode(':', [$platformid, $clientid, $deploymentid]));
+
+        $category = $DB->get_record('course_categories', ['idnumber' => $tenantkey]);
         if (!empty($category)) {
             $category->name = $this->client->get('schoolname');
             $coursecat = core_course_category::get($category->id, MUST_EXIST);
@@ -184,7 +190,7 @@ class edit extends dynamic_form {
             if ($categoryid) {
                 $data = new stdClass();
                 $data->name = $this->client->get('schoolname');
-                $data->idnumber = $formdata->deploymentid;
+                $data->idnumber = $tenantkey;
                 $coursecat = core_course_category::get($categoryid, MUST_EXIST);
                 $coursecat->update($data);
                 $this->client->set('categoryid', $categoryid);

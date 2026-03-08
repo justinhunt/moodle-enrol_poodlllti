@@ -42,3 +42,4 @@ $string['successfullyregistered'] = 'Success';
 $string['tooldetails'] = 'Tool Details';
 $string['toolregistration'] = 'Tool registration';
 $string['viewcoursecategory'] = 'View Course Category';
+$string['tenantkey'] = 'Tenant Key';

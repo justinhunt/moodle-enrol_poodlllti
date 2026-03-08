@@ -200,6 +200,8 @@ if (!empty($draftreg) && !empty($toolconfig)) {
             );
             $form->assign_category((object) [
                 'id' => $client->get('id'),
+                'platformid' => $openidconfig->issuer,
+                'clientid' => $regresponse->client_id,
                 'deploymentid' => $deployment->get_deploymentid(),
             ]);
             $client->upsert();

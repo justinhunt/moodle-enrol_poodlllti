@@ -62,6 +62,7 @@ class manage_platform extends table_sql implements dynamic {
 
         $cols = [
             'schoolname' => get_string('platformname', util::COMPONENT),
+            'tenantkey' => get_string('tenantkey', util::COMPONENT),
             'username' => get_string('canvasadmin', util::COMPONENT),
             'category' => get_string('category'),
             'coursecount' => get_string('courses'),
@@ -70,7 +71,7 @@ class manage_platform extends table_sql implements dynamic {
 
         $ufields = fields::for_userpic()->get_sql('u', renameid: 'uid')->selects;
 
-        $fields = 'pl.*, cc.name as category, COALESCE(c.coursecount, 0) as coursecount' . $ufields;
+        $fields = 'pl.*, cc.name as category, cc.idnumber as tenantkey, COALESCE(c.coursecount, 0) as coursecount' . $ufields;
         $from = '{enrol_poodlllti_clients} pl
             JOIN {course_categories} cc ON cc.id = pl.categoryid
             LEFT JOIN {user} u ON u.id = pl.userid

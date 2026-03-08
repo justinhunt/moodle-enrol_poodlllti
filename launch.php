@@ -45,6 +45,10 @@ if (empty($messagelaunch)) {
 // 1. Extract LTI Identification Data
 $launchdata = $messagelaunch->getLaunchData();
 $deploymentid = $launchdata['https://purl.imsglobal.org/spec/lti/claim/deployment_id'] ?? null;
+$iss = $launchdata['iss'] ?? null;
+$aud = $launchdata['aud'] ?? null;
+$clientid = is_array($aud) ? reset($aud) : $aud;
+
 $context = $launchdata['https://purl.imsglobal.org/spec/lti/claim/context'] ?? [];
 $contextid = $context['id'] ?? null;
 $resourcelink = $launchdata['https://purl.imsglobal.org/spec/lti/claim/resource_link'] ?? [];
@@ -52,18 +56,21 @@ $resourceid = $resourcelink['id'] ?? null;
 $customparams = $launchdata['https://purl.imsglobal.org/spec/lti/claim/custom'] ?? [];
 $sectionid = $customparams['section_id'] ?? null;
 
-if (!$deploymentid || !$contextid || !$resourceid) {
-    throw new moodle_exception('Missing required LTI launch parameters (deployment_id, context_id, or resource_id)');
+if (!$deploymentid || !$contextid || !$resourceid || !$iss || !$clientid) {
+    throw new moodle_exception('Missing required LTI launch parameters (deployment_id, context_id, resource_id, iss, or aud)');
 }
 
+// Compute Unique Tenant Key
+$tenantkey = md5(implode(':', [$iss, $clientid, $deploymentid]));
+
 // 2. Find/Provision Category
-$category = $DB->get_record('course_categories', ['idnumber' => $deploymentid]);
+$category = $DB->get_record('course_categories', ['idnumber' => $tenantkey]);
 if (!$category) {
-    throw new moodle_exception('Tenant category not found for deployment ID: ' . s($deploymentid));
+    throw new moodle_exception('Tenant category not found for deployment ID: ' . s($deploymentid) . ' (Expected Hash: ' . $tenantkey . ')');
 }
 
 // 3. Find/Provision Course
-$coursetargetidnumber = $deploymentid . ':' . $contextid;
+$coursetargetidnumber = md5($tenantkey . ':' . $contextid);
 $course = $DB->get_record('course', ['idnumber' => $coursetargetidnumber]);
 
 if (!$course) {
