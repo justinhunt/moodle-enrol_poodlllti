@@ -215,7 +215,6 @@ if (!$instance) {
 }
 
 if ($instance) {
-    $ltiroles = $launchdata[LtiConstants::ROLES] ?? [];
     $isinstructor = message_helper::is_instructor_launch($launchdata);
     $roleid = $isinstructor ? $instance->roleinstructor : $instance->rolelearner;
     $enrol->enrol_user($instance, $USER->id, $roleid);

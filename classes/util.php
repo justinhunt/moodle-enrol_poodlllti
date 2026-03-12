@@ -104,29 +104,17 @@ class util {
     public static function get_public_json_payload(platform $platform): array {
         global $CFG;
         $app = $platform->get_app();
-        $platformurl = $platform->get('platformurl');
-        $platformurl = rtrim($platformurl, '/');
         $scopes = [
             LtiConstants::AGS_SCOPE_LINEITEM,
             LtiConstants::AGS_SCOPE_RESULT_READONLY,
             LtiConstants::AGS_SCOPE_SCORE,
             LtiConstants::NRPS_SCOPE_MEMBERSHIP_READONLY,
             LtiConstants::AGS_SCOPE_LINEITEM_READONLY,
-            $platformurl . '/lti/public_jwk/scope/update',
-            $platformurl . '/lti/account_lookup/scope/show',
-            $platformurl . '/lti-ags/progress/scope/show',
-            $platformurl . '/lti/page_content/show',
-            'https://purl.imsglobal.org/spec/lti/scope/eula/user',
-            'https://purl.imsglobal.org/spec/lti/scope/eula/deployment',
-            'https://purl.imsglobal.org/spec/lti/scope/report',
-            'https://purl.imsglobal.org/spec/lti/scope/asset.readonly',
-            'https://purl.imsglobal.org/spec/lti/scope/noticehandlers',
-            'https://purl.imsglobal.org/spec/lti-reg/scope/registration',
-            'https://purl.imsglobal.org/spec/lti-reg/scope/registration.readonly',
         ];
 
         $jsonpayload = [
             'title' => $platform->get('schoolname'),
+            'description' => get_string('poodlllticonnectordescription', 'enrol_poodlllti'),
             'target_link_uri' => $CFG->wwwroot . '/enrol/poodlllti/launch.php',
             'oidc_initiation_url' => $CFG->wwwroot . '/enrol/poodlllti/login.php?id=' . $app->get_uniqueid(),
             'public_jwk_url' => $CFG->wwwroot . '/enrol/lti/jwks.php',
