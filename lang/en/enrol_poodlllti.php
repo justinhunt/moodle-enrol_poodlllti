@@ -37,6 +37,7 @@ $string['poodlllti:cancreateplatform'] = 'Can create platform';
 $string['poodlllti:config'] = 'Manage configuration';
 $string['poodlllti:manageallplatforms'] = 'Manage All Platforms';
 $string['poodlllti:unenrol'] = 'Un-enrol user';
+$string['poodlllticonnectordescription'] = 'Poodll LTI Moodle Connector';
 $string['schooldetails'] = 'School Details';
 $string['schoolname'] = 'School name';
 $string['schoolname:title'] = 'School: {$a}';
