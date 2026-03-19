@@ -178,7 +178,7 @@ class edit extends dynamic_form {
         $category = $DB->get_record('course_categories', ['idnumber' => $tenantkey]);
         if (!empty($category)) {
             $category->name = $this->client->get('schoolname');
-            $coursecat = core_course_category::get($category->id, MUST_EXIST);
+            $coursecat = core_course_category::get($category->id, MUST_EXIST, true);
             $coursecat->update($category);
             $this->client->set('categoryid', $category->id);
         } else {
@@ -187,7 +187,7 @@ class edit extends dynamic_form {
                 $data = new stdClass();
                 $data->name = $this->client->get('schoolname');
                 $data->idnumber = $tenantkey;
-                $coursecat = core_course_category::get($categoryid, MUST_EXIST);
+                $coursecat = core_course_category::get($categoryid, MUST_EXIST, true);
                 $coursecat->update($data);
                 $this->client->set('categoryid', $categoryid);
             }
